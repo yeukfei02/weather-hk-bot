@@ -12,7 +12,7 @@ Hong Kong Weather Bot
 
 2. Type ```node telegram.js```
 
-   Test in [telegram.me/weather_hk_bot] (telegram.me/weather_hk_bot)
+   Test in [telegram.me/weather_hk_bot] (http://telegram.me/weather_hk_bot)
 
 ### Example command:
 ```@Bot topics```
