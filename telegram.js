@@ -51,10 +51,9 @@ storage.setItem('warningSummaryURL', warningSummaryURL.english);
 storage.setItem('language', language.english);
 
 
-class WeatherController extends TelegramBaseController {
-    /**
-     * @param {Scope} $
-     */
+class TopicsController extends TelegramBaseController {
+    
+
     topicsHandler($) {
 
     	var date = new Date();
@@ -403,6 +402,20 @@ class WeatherController extends TelegramBaseController {
     }
 
 
+
+    get routes() {
+        return {
+            '@Bot topics': 'topicsHandler'
+            
+        }
+    }
+
+}
+
+
+
+class TellmeCurrentController extends TelegramBaseController {
+
     tellMeCurrentHandler($) {
 
     	var date = new Date();
@@ -633,7 +646,20 @@ class WeatherController extends TelegramBaseController {
     }
 
 
-    tellMeWarningHandler($) {
+    get routes() {
+        return {
+            '@Bot tellme current': 'tellMeCurrentHandler'
+        }
+    }
+
+}
+
+
+
+
+class TellmeWarningController extends TelegramBaseController {
+
+	tellMeWarningHandler($) {
         if (storage.getItem('subscribeWarning') == true) {
 			request({
 			    url: storage.getItem('warningSummaryURL'),
@@ -718,21 +744,58 @@ class WeatherController extends TelegramBaseController {
     }
 
 
-    subscribeWarningHandler($) {
+    get routes() {
+        return {
+            '@Bot tellme warning': 'tellMeWarningHandler'
+        }
+    }
+
+
+}
+
+
+
+class SubscribeWarningController extends TelegramBaseController {
+
+	subscribeWarningHandler($) {
     	storage.setItem('subscribeWarning', true);
 
         $.sendMessage('OK');
     }
 
 
-    unsubscribeWarningHandler($) {
+	get routes() {
+        return {
+            '@Bot subscribe warning': 'subscribeWarningHandler'
+        }
+    }
+
+}
+
+
+
+class UnsubscribeWarningController extends TelegramBaseController {
+
+	unsubscribeWarningHandler($) {
     	storage.setItem('subscribeWarning', false);
 
         $.sendMessage('OK');
     }
 
 
-    englishHandler($) {
+	get routes() {
+        return {
+            '@Bot unsubscribe warning': 'unsubscribeWarningHandler'
+        }
+    }
+
+}
+
+
+
+class EnglishController extends TelegramBaseController {
+
+	englishHandler($) {
     	storage.setItem('language', language.english);
 
 		storage.setItem('currentURL', currentURL.english);
@@ -743,7 +806,21 @@ class WeatherController extends TelegramBaseController {
     }
 
 
-    traditionalChineseHandler($) {
+
+	get routes() {
+        return {
+            '@Bot English': 'englishHandler'
+        }
+    }
+
+}
+
+
+
+
+class TraditionalChineseController extends TelegramBaseController {
+	
+	traditionalChineseHandler($) {
 		storage.setItem('language', language.traditionalChinese);
 
 		storage.setItem('currentURL', currentURL.traditionalChinese);
@@ -754,6 +831,21 @@ class WeatherController extends TelegramBaseController {
     }
 
 
+
+	get routes() {
+        return {
+            '@Bot 繁體中文': 'traditionalChineseHandler'
+        }
+    }
+
+}
+
+
+
+
+class SimplifiedChineseController extends TelegramBaseController {
+	
+	
     simplifiedChineseHandler($) {
     	storage.setItem('language', language.simplifiedChinese);
 
@@ -765,25 +857,29 @@ class WeatherController extends TelegramBaseController {
     }
 
 
-    get routes() {
+
+
+	get routes() {
         return {
-            '@Bot topics': 'topicsHandler',
-            '@Bot tellme current': 'tellMeCurrentHandler',
-            '@Bot tellme warning': 'tellMeWarningHandler',
-            '@Bot subscribe warning': 'subscribeWarningHandler',
-            '@Bot unsubscribe warning': 'unsubscribeWarningHandler',
-            '@Bot English': 'englishHandler',
-            '@Bot 繁體中文': 'traditionalChineseHandler',
             '@Bot 简体中文': 'simplifiedChineseHandler'
         }
     }
+
 }
 
 
+
+
+
 tg.router
-    .when(['@Bot topics', '@Bot tellme current', '@Bot tellme warning', 
-            '@Bot subscribe warning', '@Bot unsubscribe warning',
-            '@Bot English', '@Bot 繁體中文', '@Bot 简体中文'], new WeatherController());
+    .when('@Bot topics', new TopicsController())
+    .when('@Bot tellme current', new TellmeCurrentController())
+   	.when('@Bot tellme warning', new TellmeWarningController())
+   	.when('@Bot subscribe warning', new SubscribeWarningController())
+   	.when('@Bot unsubscribe warning', new UnsubscribeWarningController())
+   	.when('@Bot English', new EnglishController())
+   	.when('@Bot 繁體中文', new TraditionalChineseController())
+   	.when('@Bot 简体中文', new SimplifiedChineseController());
 
 
 
