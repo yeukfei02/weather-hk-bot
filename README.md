@@ -1,4 +1,4 @@
-# weather_hk_bot
+# weather-hk-bot
 
 Hong Kong Weather Bot
 
