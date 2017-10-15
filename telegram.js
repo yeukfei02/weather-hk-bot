@@ -1,10 +1,10 @@
 'use strict';
 
-// Bot name: weather_hk_bot
-// link: telegram.me/weather_hk_bot
+// Bot name: weatherHKBot
+// link: t.me/weatherHKBot
 const Telegram = require('telegram-node-bot');
 const TelegramBaseController = Telegram.TelegramBaseController;
-const tg = new Telegram.Telegram('249861754:AAE7FfjHk7SmDIvf7pIkvJ_3EpfJKhORW9Y');
+const tg = new Telegram.Telegram('454777035:AAH7NRlTlNv_7CJ8Qepdoc8a12NfxO-s4gQ');
 
 
 var request = require("request");
