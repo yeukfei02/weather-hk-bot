@@ -6,6 +6,8 @@ Hong Kong Weather Bot
 - Install node.js
 
 ### Testing and run:
+```$ npm install```
+
 ```$ node telegram.js```
 
 Open http://t.me/weatherHKBot
