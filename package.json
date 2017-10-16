@@ -1,5 +1,5 @@
 {
-  "name": "weather_hk_bot",
+  "name": "weather-hk-bot",
   "version": "1.0.0",
   "description": "Hong Kong Weather Bot",
   "main": "telegram.js",
