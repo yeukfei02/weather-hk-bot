@@ -3,16 +3,12 @@
 Hong Kong Weather Bot
 
 ### Requirement:
-- Install [Node.js] (https://nodejs.org/en/)
+- Install node.js
 
 ### Testing and run:
-1. Type ```node server.js```
+```$ node telegram.js```
 
-   Test in terminal
-
-2. Type ```node telegram.js```
-
-   Test in [t.me/weatherHKBot] (http://t.me/weatherHKBot)
+Open http://t.me/weatherHKBot
 
 ### Example command:
 ```@Bot topics```

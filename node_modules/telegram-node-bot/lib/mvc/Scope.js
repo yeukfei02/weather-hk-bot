@@ -9,29 +9,29 @@ class Scope {
     /**
      *
      * @param {Update} update
-     * @param {Object} query
      * @param {TelegramApi} api
      * @param {BaseScopeExtension[]} extensions
      * @param {Function[]} waitingRequests
      * @param {Object} waitingCallbackQueries
-     * @param {Object} chatSession
-     * @param {Object|null} userSession
      * @param {BaseLogger} logger
+     * @param {Function} processUpdate
+     * @param {TelegramSessionStorage} sessionStorage
+     * @param {Function} waitForUpdate
+     * @param {Function} waitForCallback
      */
     constructor(
         update,
-        query,
         api,
         extensions,
         waitingRequests,
         waitingCallbackQueries,
-        chatSession,
-        userSession,
-        logger
+        logger,
+        sessionStorage,
+        waitForUpdate,
+        waitForCallback
     ) {
         this._api = api
         this._update = update
-        this._query = query
         /**
          * 
          * @type {BaseScopeExtension[]}
@@ -48,10 +48,10 @@ class Scope {
         this._userId = this._message.from.id
         this._fromGroupChat = !(this._userId === this._chatId)
 
-        this._chatSession = chatSession
-        this._userSession = userSession
-
         this._logger = logger
+        this._sessionStorage = sessionStorage
+        this._waitForUpdate = waitForUpdate
+        this._waitForCallback = waitForCallback
 
         this._extensions.forEach(extension => {
             const extensionInstance = new extension(this)
@@ -60,19 +60,25 @@ class Scope {
     }
 
     /**
+     * @returns {TelegramSessionStorage}
+     */
+    get sessionStorage() {
+        return this._sessionStorage
+    }
+
+    /**
+     * @returns {BaseStorage}
+     */
+    get storage() {
+        return this._sessionStorage
+    }
+
+    /**
      *
      * @returns {Update}
      */
     get update() {
         return this._update
-    }
-
-    /**
-     * 
-     * @returns {string[]}
-     */
-    get query() {
-        return this._query
     }
 
     /**
@@ -116,19 +122,37 @@ class Scope {
     }
 
     /**
-     *
-     * @returns {Object}
+     * @param {string} key
+     * @returns {Promise.<*>}
      */
-    get chatSession() {
-        return this._chatSession
+    getUserSession(key) {
+        return this._sessionStorage.getUserSession(this.userId, key)
     }
 
     /**
-     *
-     * @returns {Object|null}
+     * @param {string} key
+     * @param {*} value
+     * @returns {Promise}
      */
-    get userSession() {
-        return this._userSession
+    setUserSession(key, value) {
+        return this._sessionStorage.setUserSession(this.userId, key, value)
+    }
+
+    /**
+     * @param {string} key
+     * @returns {Promise.<*>}
+     */
+    getChatSession(key) {
+        return this._sessionStorage.getChatSession(this.chatId, key)
+    }
+
+    /**
+     * @param {string} key
+     * @param {*} value
+     * @returns {Promise}
+     */
+    setChatSession(key, value) {
+        return this._sessionStorage.setChatSession(this.chatId, key, value)
     }
 
     /**
@@ -156,6 +180,7 @@ class Scope {
     get waitForRequest() {
         return new Promise(resolve => {
             this._waitingRequests[this.chatId] = resolve
+            this._waitForUpdate(this.chatId)
         })
     }
 
@@ -174,16 +199,21 @@ class Scope {
      */
     waitForCallbackQuery(data, callback) {
         if (typeof data === 'string') {
+            this._waitForCallback(data)
             this._waitingCallbackQueries[data] = callback
         }
 
         if (Array.isArray(data)) {
-            data.forEach(item => this._waitingCallbackQueries[item] = callback)
+            data.forEach(item => {
+                this._waitForCallback(item)
+                this._waitingCallbackQueries[item] = callback
+            })
         }
 
         if (data instanceof InlineKeyboardMarkup) {
             data.inlineKeyboard.forEach(line => {
                 line.forEach(key => {
+                    this._waitForCallback(key.callbackData)
                     this._waitingCallbackQueries[key.callbackData] = callback
                 })
             })
@@ -350,7 +380,11 @@ class Scope {
             keyboard = menu.map(item => {
                 callbackData.push(Math.random().toString(36).substring(7))
 
-                return [new InlineKeyboardButton(item.text, item.url, callbackData[callbackData.length - 1])]
+                return [new InlineKeyboardButton(
+                    item.text,
+                    item.url,
+                    callbackData[callbackData.length - 1]
+                )]
             })
         }
         else {
@@ -360,10 +394,14 @@ class Scope {
 
                 callbackData.push(Math.random().toString(36).substring(7))
 
-                keyboard[line].push(new InlineKeyboardButton(item.text, item.url, callbackData[callbackData.length - 1]))
+                keyboard[line].push(new InlineKeyboardButton(
+                    item.text,
+                    item.url,
+                    callbackData[callbackData.length - 1]
+                ))
 
                 let goToNextLine = Array.isArray(layout) ? keyboard[line].length ===
-                layout[line] : keyboard[line].length === layout
+                                    layout[line] : keyboard[line].length === layout
 
                 if (goToNextLine)
                     line++
@@ -435,7 +473,7 @@ class Scope {
      * @returns {Promise<Message>}
      */
     forwardMessage(fromChatId, messageId, options) {
-        return this._api.forwardMessage(this.chatId, fromthis.chatId, messageId, options)
+        return this._api.forwardMessage(this.chatId, fromChatId, messageId, options)
     }
 
     /**
