@@ -12,44 +12,37 @@ const tg = new Telegram.Telegram('464954249:AAFYuoCvPmHEp3bfg4X1iAjLE3YVGHc56Gg'
 const request = require("request");
 const parseString = require('xml2js').parseString;
 const htmlToText = require('html-to-text');
-const storage = require('node-persist');
-
 
 // store user setting
-storage.initSync();
-storage.setItem('subscribeWarning', true);
+let languageObj = {
+    english: 'English',
+    traditionalChinese: '繁體中文',
+    simplifiedChinese: '简体中文'
+};
 
-let currentURL = {
+let currentURLObj = {
     english: 'http://rss.weather.gov.hk/rss/CurrentWeather.xml',
     traditionalChinese: 'http://rss.weather.gov.hk/rss/CurrentWeather_uc.xml',
     simplifiedChinese: 'http://gbrss.weather.gov.hk/rss/CurrentWeather_uc.xml'
 };
 
-
-let warningInformationURL = {
+let warningInformationURLObj = {
     english: 'http://rss.weather.gov.hk/rss/WeatherWarningBulletin.xml',
     traditionalChinese: 'http://rss.weather.gov.hk/rss/WeatherWarningBulletin_uc.xml',
     simplifiedChinese: 'http://gbrss.weather.gov.hk/rss/WeatherWarningBulletin_uc.xml'
 };
 
-
-let warningSummaryURL = {
+let warningSummaryURLObj = {
     english: 'http://rss.weather.gov.hk/rss/WeatherWarningSummaryv2.xml',
     traditionalChinese: 'http://rss.weather.gov.hk/rss/WeatherWarningSummaryv2_uc.xml',
     simplifiedChinese: 'http://gbrss.weather.gov.hk/rss/WeatherWarningSummaryv2_uc.xml'
 };
 
-let language = {
-    english: 'English',
-    traditionalChinese: '繁體中文',
-    simplifiedChinese: '简体中文'
-
-};
-
-storage.setItem('currentURL', currentURL.english);
-storage.setItem('warningInformationURL', warningInformationURL.english);
-storage.setItem('warningSummaryURL', warningSummaryURL.english);
-storage.setItem('language', language.english);
+let subscribeWarning = true;
+let language = languageObj.english;
+let currentURL = currentURLObj.english;
+let warningInformationURL = warningInformationURLObj.english;
+let warningSummaryURL = warningSummaryURLObj.english;
 
 
 function getCurrentResponse($, urlLink, strToShow) {
@@ -114,29 +107,27 @@ function getWarningResponse($, urlLink, strToShow) {
 
 class TopicsController extends TelegramBaseController {
     topicsHandler($) {
-    	let language = storage.getItem('language');
-    	let subscribeWarning = storage.getItem('subscribeWarning');
 		switch (language) {
 			case 'English':
-				getCurrentResponse($, currentURL.english, 'Current');
+				getCurrentResponse($, currentURL, 'Current');
 				if (subscribeWarning) {
-					getWarningResponse($, warningInformationURL.english, 'Warning');
+					getWarningResponse($, warningInformationURL, 'Warning');
 				} else {
 					$.sendMessage('Please subscribe warning');
 				}
 				break;
 			case '繁體中文':
-				getCurrentResponse($, currentURL.traditionalChinese, '現時');
+				getCurrentResponse($, currentURL, '現時');
 				if (subscribeWarning) {
-					getWarningResponse($, warningInformationURL.traditionalChinese, '警告');
+					getWarningResponse($, warningInformationURL, '警告');
 				} else {
 					$.sendMessage('Please subscribe warning');
 				}
 				break;
 			case '简体中文':
-				getCurrentResponse($, currentURL.simplifiedChinese, '现时');
+				getCurrentResponse($, currentURL, '现时');
 				if (subscribeWarning) {
-					getWarningResponse($, warningInformationURL.simplifiedChinese, '警告');
+					getWarningResponse($, warningInformationURL, '警告');
 				} else {
 					$.sendMessage('Please subscribe warning');
 				}
@@ -159,16 +150,15 @@ class TopicsController extends TelegramBaseController {
 
 class TellmeCurrentController extends TelegramBaseController {
     tellMeCurrentHandler($) {
-    	let language = storage.getItem('language');
     	switch (language) {
 			case 'English':
-				getCurrentResponse($, currentURL.english, 'Current');
+				getCurrentResponse($, currentURL, 'Current');
 				break;
 			case '繁體中文':
-				getCurrentResponse($, currentURL.traditionalChinese, '現時');
+				getCurrentResponse($, currentURL, '現時');
 				break;
 			case '简体中文':
-				getCurrentResponse($, currentURL.simplifiedChinese, '现时');
+				getCurrentResponse($, currentURL, '现时');
 				break;
 
 		}
@@ -186,26 +176,24 @@ class TellmeCurrentController extends TelegramBaseController {
 
 class TellmeWarningController extends TelegramBaseController {
 	tellMeWarningHandler($) {
-		let language = storage.getItem('language');
-		let subscribeWarning = storage.getItem('subscribeWarning');
 		switch (language) {
 			case 'English':
 				if (subscribeWarning) {
-					getWarningResponse($, warningSummaryURL.english, 'Warning');
+					getWarningResponse($, warningSummaryURL, 'Warning');
 				} else {
 					$.sendMessage('Please subscribe warning');
 				}
 				break;
 			case '繁體中文':
 				if (subscribeWarning) {
-					getWarningResponse($, warningSummaryURL.traditionalChinese, '警告');
+					getWarningResponse($, warningSummaryURL, '警告');
 				} else {
 					$.sendMessage('Please subscribe warning');
 				}
 				break;
 			case '简体中文':
 				if (subscribeWarning) {
-					getWarningResponse($, warningSummaryURL.simplifiedChinese, '警告');
+					getWarningResponse($, warningSummaryURL, '警告');
 				} else {
 					$.sendMessage('Please subscribe warning');
 				}
@@ -225,12 +213,11 @@ class TellmeWarningController extends TelegramBaseController {
 }
 
 
-
 class SubscribeWarningController extends TelegramBaseController {
 	subscribeWarningHandler($) {
-    	storage.setItem('subscribeWarning', true);
+    	subscribeWarning = true;
 
-        $.sendMessage('OK');
+        $.sendMessage('You just subscribe warning');
     }
 
 	get routes() {
@@ -244,9 +231,9 @@ class SubscribeWarningController extends TelegramBaseController {
 
 class UnsubscribeWarningController extends TelegramBaseController {
 	unsubscribeWarningHandler($) {
-    	storage.setItem('subscribeWarning', false);
+    	subscribeWarning = false;
 
-        $.sendMessage('OK');
+        $.sendMessage('You just unsubscribe warning');
     }
 
 	get routes() {
@@ -260,10 +247,10 @@ class UnsubscribeWarningController extends TelegramBaseController {
 
 class EnglishController extends TelegramBaseController {
 	englishHandler($) {
-    	storage.setItem('language', language.english);
-		storage.setItem('currentURL', currentURL.english);
-		storage.setItem('warningInformationURL', warningInformationURL.english);
-		storage.setItem('warningSummaryURL', warningSummaryURL.english);
+		language = languageObj.english;
+		currentURL = currentURLObj.english;
+		warningInformationURL = warningInformationURLObj.english;
+		warningSummaryURL = warningSummaryURLObj.english;
 
         $.sendMessage('OK');
     }
@@ -279,10 +266,10 @@ class EnglishController extends TelegramBaseController {
 
 class TraditionalChineseController extends TelegramBaseController {
 	traditionalChineseHandler($) {
-		storage.setItem('language', language.traditionalChinese);
-		storage.setItem('currentURL', currentURL.traditionalChinese);
-		storage.setItem('warningInformationURL', warningInformationURL.traditionalChinese);
-		storage.setItem('warningSummaryURL', warningSummaryURL.traditionalChinese);
+		language = languageObj.traditionalChinese;
+		currentURL = currentURLObj.traditionalChinese;
+		warningInformationURL = warningInformationURLObj.traditionalChinese;
+		warningSummaryURL = warningSummaryURLObj.traditionalChinese;
 
         $.sendMessage('知道了');
     }
@@ -298,10 +285,10 @@ class TraditionalChineseController extends TelegramBaseController {
 
 class SimplifiedChineseController extends TelegramBaseController {
     simplifiedChineseHandler($) {
-    	storage.setItem('language', language.simplifiedChinese);
-		storage.setItem('currentURL', currentURL.simplifiedChinese);
-		storage.setItem('warningInformationURL', warningInformationURL.simplifiedChinese);
-		storage.setItem('warningSummaryURL', warningSummaryURL.simplifiedChinese);
+    	language = languageObj.simplifiedChinese;
+		currentURL = currentURLObj.simplifiedChinese;
+		warningInformationURL = warningInformationURLObj.simplifiedChinese;
+		warningSummaryURL = warningSummaryURLObj.simplifiedChinese;
 
         $.sendMessage('知道了');
     }
@@ -324,8 +311,4 @@ tg.router
 	.when(new TextCommand('@Bot English', 'englishCommand'), new EnglishController())
 	.when(new TextCommand('@Bot 繁體中文', 'traditionalChineseCommand'), new TraditionalChineseController())
 	.when(new TextCommand('@Bot 简体中文', 'simplifiedChineseCommand'), new SimplifiedChineseController());
-
-
-
-
 
