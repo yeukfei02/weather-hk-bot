@@ -14,34 +14,50 @@ $ node telegram.js
 Open http://t.me/weatherHKBot
 
 ### Example command:
-```@Bot topics```
+```
+@Bot topics
+```
 
 List out the topic of current weather, warning
 
-```@Bot tellme current```
+```
+@Bot tellme current
+```
 
 Echo back the current info in forecast feed
 
-```@Bot tellme warning```
+```
+@Bot tellme warning
+```
 
 Echo back the current info in weather warning
 
-```@Bot subscribe warning```
+```
+@Bot subscribe warning
+```
 
 Enable warning message
 
-```@Bot unsubscribe warning```
+```
+@Bot unsubscribe warning
+```
 
 Disable warning message
 
-```@Bot 繁體中文```
+```
+@Bot 繁體中文
+```
 
 Set content in Traditional Chinese
 
-```@Bot 简体中文```
+```
+@Bot 简体中文
+```
 
 Set content in Simplified Chinese
 
-```@Bot English```
+```
+@Bot English
+```
 
 Set content in English
