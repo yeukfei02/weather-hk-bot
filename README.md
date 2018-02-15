@@ -3,7 +3,7 @@
 Hong Kong Weather Bot
 
 ### Requirement:
-- Install node.js
+- Install yarn
 
 ### Testing and run:
 ```
