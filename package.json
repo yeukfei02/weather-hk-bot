@@ -14,10 +14,7 @@
     "test": "node telegram.js",
     "start": "node telegram.js"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/yeukfei02/weather_hk_bot.git"
-  },
+  "repository": "git+https://github.com/yeukfei02/weather_hk_bot.git",
   "keywords": [
     "node"
   ],

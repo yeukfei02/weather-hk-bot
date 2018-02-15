@@ -7,7 +7,7 @@ Hong Kong Weather Bot
 
 ### Testing and run:
 ```
-$ npm install
+$ yarn
 $ node telegram.js
 ```
 
