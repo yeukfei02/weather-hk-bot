@@ -8,7 +8,7 @@ Hong Kong Weather Bot
 ### Testing and run:
 ```
 $ yarn
-$ node telegram.js
+$ yarn start
 ```
 
 Open http://t.me/weatherHKBot
