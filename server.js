@@ -7,7 +7,7 @@ console.log('OK. The bot is running...')
 const Telegram = require('telegram-node-bot');
 const TelegramBaseController = Telegram.TelegramBaseController;
 const TextCommand = Telegram.TextCommand;
-const $ = new Telegram.Telegram('464954249:AAFYuoCvPmHEp3bfg4X1iAjLE3YVGHc56Gg');
+const $ = new Telegram.Telegram(process.env.TELEGRAM_KEY);
 
 const request = require("request");
 const parseString = require('xml2js').parseString;
