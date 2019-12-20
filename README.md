@@ -15,49 +15,55 @@ Open http://t.me/weatherHKBot
 
 ### Example command:
 ```
-@Bot topics
+/start
+```
+
+Show all example command
+
+```
+/tellMeCurrentAndWarning
 ```
 
 List out the topic of current weather, warning
 
 ```
-@Bot tellme current
+/tellmeCurrent
 ```
 
 Echo back the current info in forecast feed
 
 ```
-@Bot tellme warning
+/tellmeWarning
 ```
 
 Echo back the current info in weather warning
 
 ```
-@Bot subscribe warning
+/subscribeWarning
 ```
 
 Enable warning message
 
 ```
-@Bot unsubscribe warning
+/unsubscribeWarning
 ```
 
 Disable warning message
 
 ```
-@Bot 繁體中文
+/繁體中文
 ```
 
 Set content in Traditional Chinese
 
 ```
-@Bot 简体中文
+/简体中文
 ```
 
 Set content in Simplified Chinese
 
 ```
-@Bot English
+/english
 ```
 
 Set content in English
