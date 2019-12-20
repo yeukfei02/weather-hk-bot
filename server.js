@@ -1,7 +1,3 @@
-'use strict';
-
-console.log('OK. The bot is running...');
-
 // bot name: weatherHKBot
 // link: t.me/weatherHKBot
 const Telegram = require('telegram-node-bot');
