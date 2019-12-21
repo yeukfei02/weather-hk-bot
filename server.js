@@ -7,7 +7,7 @@ const tg = new Telegram.Telegram(process.env.TELEGRAM_KEY, { workers: 1 });
 
 const axios = require("axios");
 const _ = require("lodash");
-const parseString = require('xml2js').parseString;
+const xmlParser = require('xml2json');
 const htmlToText = require('html-to-text');
 
 // store user setting
@@ -44,26 +44,16 @@ let warningSummaryURL = warningSummaryURLObj.english;
 async function getResponse(tg, urlLink, strToShow) {
   const response = await axios.get(urlLink);
   if (!_.isEmpty(response)) {
-    parseString(response.data, (err, result) => {
-      if (!err) {
-        if (!_.isEmpty(result.rss.channel)) {
-          result.rss.channel.map((item, i) => {
-            if (!_.isEmpty(item.item)) {
-              item.item.map((value, i) => {
-                const response = value.description.toString();
-
-                const text = htmlToText.fromString(response, {
-                  // wordwrap: 130,
-                  // ignoreImage: true
-                });
-                tg.sendMessage(`------------------ [${strToShow}] ------------------`);
-                tg.sendMessage(text);
-              });
-            }
-          });
-        }
-      }
+    const xmlString = response.data;
+    const json = xmlParser.toJson(xmlString);
+    const jsonParsed = JSON.parse(json);
+    const itemDescriptionStr = jsonParsed.rss.channel.item.description.toString();
+    const text = htmlToText.fromString(itemDescriptionStr, {
+      // wordwrap: 130,
+      // ignoreImage: true
     });
+    tg.sendMessage(`------------------ [${strToShow}] ------------------`);
+    tg.sendMessage(text);
   }
 }
 
