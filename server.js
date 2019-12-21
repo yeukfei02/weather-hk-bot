@@ -5,30 +5,31 @@ const TelegramBaseController = Telegram.TelegramBaseController;
 const TextCommand = Telegram.TextCommand;
 const $ = new Telegram.Telegram(process.env.TELEGRAM_KEY);
 
-const request = require("request");
+const axios = require("axios");
+const _ = require("lodash");
 const parseString = require('xml2js').parseString;
 const htmlToText = require('html-to-text');
 
 // store user setting
-let languageObj = {
+const languageObj = {
   english: 'English',
   traditionalChinese: '繁體中文',
   simplifiedChinese: '简体中文'
 };
 
-let currentURLObj = {
+const currentURLObj = {
   english: 'http://rss.weather.gov.hk/rss/CurrentWeather.xml',
   traditionalChinese: 'http://rss.weather.gov.hk/rss/CurrentWeather_uc.xml',
   simplifiedChinese: 'http://gbrss.weather.gov.hk/rss/CurrentWeather_uc.xml'
 };
 
-let warningInformationURLObj = {
+const warningInformationURLObj = {
   english: 'http://rss.weather.gov.hk/rss/WeatherWarningBulletin.xml',
   traditionalChinese: 'http://rss.weather.gov.hk/rss/WeatherWarningBulletin_uc.xml',
   simplifiedChinese: 'http://gbrss.weather.gov.hk/rss/WeatherWarningBulletin_uc.xml'
 };
 
-let warningSummaryURLObj = {
+const warningSummaryURLObj = {
   english: 'http://rss.weather.gov.hk/rss/WeatherWarningSummaryv2.xml',
   traditionalChinese: 'http://rss.weather.gov.hk/rss/WeatherWarningSummaryv2_uc.xml',
   simplifiedChinese: 'http://gbrss.weather.gov.hk/rss/WeatherWarningSummaryv2_uc.xml'
@@ -40,52 +41,33 @@ let currentURL = currentURLObj.english;
 let warningInformationURL = warningInformationURLObj.english;
 let warningSummaryURL = warningSummaryURLObj.english;
 
-function getCurrentResponse($, urlLink, strToShow) {
-  // current response
-  request({
-    url: urlLink,
-    json: true
-  }, (error, response, body) => {
-    if (!error && response.statusCode === 200) {
-      parseString(body, (err, result) => {
-        for (let i = 0; i < result.rss.channel.length; i++) {
-          for (let j = 0; j < result.rss.channel[i].item.length; j++) {
-            let currentResponse = result.rss.channel[i].item[j].description.toString();
+function getResponse($, urlLink, strToShow) {
+  axios.get(urlLink)
+    .then((response) => {
+      parseString(response.data, (err, result) => {
+        if (!err) {
+          if (!_.isEmpty(result.rss.channel)) {
+            result.rss.channel.map((item, i) => {
+              if (!_.isEmpty(item.item)) {
+                item.item.map((value, i) => {
+                  const response = value.description.toString();
 
-            let text = htmlToText.fromString(currentResponse, {
-              wordwrap: 130,
-              //ignoreImage: true
+                  const text = htmlToText.fromString(response, {
+                    wordwrap: 130,
+                    //ignoreImage: true
+                  });
+                  $.sendMessage(`------------------ [${strToShow}] ------------------`);
+                  $.sendMessage(text);
+                });
+              }
             });
-            $.sendMessage(`------------------ [${strToShow}] ------------------`);
-            $.sendMessage(text);
           }
         }
       });
-    }
-  });
-}
-
-function getWarningResponse($, urlLink, strToShow) {
-  // warning response
-  request({
-    url: urlLink,
-    json: true
-  }, (error, response, body) => {
-    if (!error && response.statusCode === 200) {
-      parseString(body, (err, result) => {
-        for (let i = 0; i < result.rss.channel.length; i++) {
-          for (let j = 0; j < result.rss.channel[i].item.length; j++) {
-            let warningResponse = result.rss.channel[i].item[j].description.toString();
-            let text = htmlToText.fromString(warningResponse, {
-              wordwrap: 130
-            });
-            $.sendMessage(`------------------ [${strToShow}] ------------------`);
-            $.sendMessage(text);
-          }
-        }
-      });
-    }
-  });
+    })
+    .catch((error) => {
+      console.log("error = ", error);
+    });
 }
 
 class StartController extends TelegramBaseController {
@@ -132,25 +114,25 @@ class TellMeCurrentAndWarningController extends TelegramBaseController {
   tellMeCurrentAndWarningHandler($) {
     switch (language) {
       case 'English':
-        getCurrentResponse($, currentURL, 'Current');
+        getResponse($, currentURL, 'Current');
         if (subscribeWarning) {
-          getWarningResponse($, warningInformationURL, 'Warning');
+          getResponse($, warningInformationURL, 'Warning');
         } else {
           $.sendMessage('Please subscribe warning');
         }
         break;
       case '繁體中文':
-        getCurrentResponse($, currentURL, '現時');
+        getResponse($, currentURL, '現時');
         if (subscribeWarning) {
-          getWarningResponse($, warningInformationURL, '警告');
+          getResponse($, warningInformationURL, '警告');
         } else {
           $.sendMessage('Please subscribe warning');
         }
         break;
       case '简体中文':
-        getCurrentResponse($, currentURL, '现时');
+        getResponse($, currentURL, '现时');
         if (subscribeWarning) {
-          getWarningResponse($, warningInformationURL, '警告');
+          getResponse($, warningInformationURL, '警告');
         } else {
           $.sendMessage('Please subscribe warning');
         }
@@ -169,13 +151,13 @@ class TellmeCurrentController extends TelegramBaseController {
   tellMeCurrentHandler($) {
     switch (language) {
       case 'English':
-        getCurrentResponse($, currentURL, 'Current');
+        getResponse($, currentURL, 'Current');
         break;
       case '繁體中文':
-        getCurrentResponse($, currentURL, '現時');
+        getResponse($, currentURL, '現時');
         break;
       case '简体中文':
-        getCurrentResponse($, currentURL, '现时');
+        getResponse($, currentURL, '现时');
         break;
     }
   }
@@ -192,21 +174,21 @@ class TellmeWarningController extends TelegramBaseController {
     switch (language) {
       case 'English':
         if (subscribeWarning) {
-          getWarningResponse($, warningSummaryURL, 'Warning');
+          getResponse($, warningSummaryURL, 'Warning');
         } else {
           $.sendMessage('Please subscribe warning');
         }
         break;
       case '繁體中文':
         if (subscribeWarning) {
-          getWarningResponse($, warningSummaryURL, '警告');
+          getResponse($, warningSummaryURL, '警告');
         } else {
           $.sendMessage('Please subscribe warning');
         }
         break;
       case '简体中文':
         if (subscribeWarning) {
-          getWarningResponse($, warningSummaryURL, '警告');
+          getResponse($, warningSummaryURL, '警告');
         } else {
           $.sendMessage('Please subscribe warning');
         }
