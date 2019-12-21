@@ -49,8 +49,13 @@ async function getResponse(tg, urlLink, strToShow) {
     const jsonParsed = JSON.parse(json);
     const itemDescriptionStr = jsonParsed.rss.channel.item.description.toString();
     const text = htmlToText.fromString(itemDescriptionStr, {
-      // wordwrap: 130,
-      // ignoreImage: true
+      tables: true,
+      // ignoreImage: true,
+      format: {
+        image: function(elem, fn, options) {
+          return elem.attribs.src + '\n\n';
+        }
+      }
     });
     tg.sendMessage(`------------------ [${strToShow}] ------------------`);
     tg.sendMessage(text);
