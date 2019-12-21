@@ -41,33 +41,30 @@ let currentURL = currentURLObj.english;
 let warningInformationURL = warningInformationURLObj.english;
 let warningSummaryURL = warningSummaryURLObj.english;
 
-function getResponse($, urlLink, strToShow) {
-  axios.get(urlLink)
-    .then((response) => {
-      parseString(response.data, (err, result) => {
-        if (!err) {
-          if (!_.isEmpty(result.rss.channel)) {
-            result.rss.channel.map((item, i) => {
-              if (!_.isEmpty(item.item)) {
-                item.item.map((value, i) => {
-                  const response = value.description.toString();
+async function getResponse($, urlLink, strToShow) {
+  const response = await axios.get(urlLink);
+  if (!_.isEmpty(response)) {
+    parseString(response.data, (err, result) => {
+      if (!err) {
+        if (!_.isEmpty(result.rss.channel)) {
+          result.rss.channel.map((item, i) => {
+            if (!_.isEmpty(item.item)) {
+              item.item.map((value, i) => {
+                const response = value.description.toString();
 
-                  const text = htmlToText.fromString(response, {
-                    wordwrap: 130,
-                    //ignoreImage: true
-                  });
-                  $.sendMessage(`------------------ [${strToShow}] ------------------`);
-                  $.sendMessage(text);
+                const text = htmlToText.fromString(response, {
+                  wordwrap: 130,
+                  //ignoreImage: true
                 });
-              }
-            });
-          }
+                $.sendMessage(`------------------ [${strToShow}] ------------------`);
+                $.sendMessage(text);
+              });
+            }
+          });
         }
-      });
-    })
-    .catch((error) => {
-      console.log("error = ", error);
+      }
     });
+  }
 }
 
 class StartController extends TelegramBaseController {
@@ -111,28 +108,28 @@ Set content in English
 }
 
 class TellMeCurrentAndWarningController extends TelegramBaseController {
-  tellMeCurrentAndWarningHandler($) {
+  async tellMeCurrentAndWarningHandler($) {
     switch (language) {
       case 'English':
-        getResponse($, currentURL, 'Current');
+        await getResponse($, currentURL, 'Current');
         if (subscribeWarning) {
-          getResponse($, warningInformationURL, 'Warning');
+          await getResponse($, warningInformationURL, 'Warning');
         } else {
           $.sendMessage('Please subscribe warning');
         }
         break;
       case '繁體中文':
-        getResponse($, currentURL, '現時');
+        await getResponse($, currentURL, '現時');
         if (subscribeWarning) {
-          getResponse($, warningInformationURL, '警告');
+          await getResponse($, warningInformationURL, '警告');
         } else {
           $.sendMessage('Please subscribe warning');
         }
         break;
       case '简体中文':
-        getResponse($, currentURL, '现时');
+        await getResponse($, currentURL, '现时');
         if (subscribeWarning) {
-          getResponse($, warningInformationURL, '警告');
+          await getResponse($, warningInformationURL, '警告');
         } else {
           $.sendMessage('Please subscribe warning');
         }
