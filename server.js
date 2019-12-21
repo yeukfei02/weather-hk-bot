@@ -53,8 +53,8 @@ async function getResponse(tg, urlLink, strToShow) {
                 const response = value.description.toString();
 
                 const text = htmlToText.fromString(response, {
-                  wordwrap: 130,
-                  //ignoreImage: true
+                  // wordwrap: 130,
+                  // ignoreImage: true
                 });
                 tg.sendMessage(`------------------ [${strToShow}] ------------------`);
                 tg.sendMessage(text);
