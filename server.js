@@ -41,7 +41,7 @@ let currentURL = currentURLObj.english;
 let warningInformationURL = warningInformationURLObj.english;
 let warningSummaryURL = warningSummaryURLObj.english;
 
-async function getResponse(tg, urlLink, strToShow) {
+async function getResponse(tg, urlLink) {
   const response = await axios.get(urlLink);
   if (!_.isEmpty(response)) {
     const xmlString = response.data;
@@ -50,14 +50,13 @@ async function getResponse(tg, urlLink, strToShow) {
     const itemDescriptionStr = jsonParsed.rss.channel.item.description.toString();
     const text = htmlToText.fromString(itemDescriptionStr, {
       tables: true,
-      // ignoreImage: true,
-      format: {
-        image: function(elem, fn, options) {
-          return elem.attribs.src + '\n\n';
-        }
-      }
+      ignoreImage: true,
+      // format: {
+      //   image: function(elem, fn, options) {
+      //     return elem.attribs.src + '\n\n';
+      //   }
+      // }
     });
-    tg.sendMessage(`------------------ [${strToShow}] ------------------`);
     tg.sendMessage(text);
   }
 }
@@ -118,25 +117,25 @@ class TellMeCurrentAndWarningController extends TelegramBaseController {
   async tellMeCurrentAndWarningHandler(tg) {
     switch (language) {
       case 'English':
-        await getResponse(tg, currentURL, 'Current');
+        await getResponse(tg, currentURL);
         if (subscribeWarning) {
-          await getResponse(tg, warningInformationURL, 'Warning');
+          await getResponse(tg, warningInformationURL);
         } else {
           tg.sendMessage('Please subscribe warning');
         }
         break;
       case '繁體中文':
-        await getResponse(tg, currentURL, '現時');
+        await getResponse(tg, currentURL);
         if (subscribeWarning) {
-          await getResponse(tg, warningInformationURL, '警告');
+          await getResponse(tg, warningInformationURL);
         } else {
           tg.sendMessage('請訂閱警告');
         }
         break;
       case '简体中文':
-        await getResponse(tg, currentURL, '现时');
+        await getResponse(tg, currentURL);
         if (subscribeWarning) {
-          await getResponse(tg, warningInformationURL, '警告');
+          await getResponse(tg, warningInformationURL);
         } else {
           tg.sendMessage('请订阅警告');
         }
@@ -155,13 +154,13 @@ class TellmeCurrentController extends TelegramBaseController {
   tellMeCurrentHandler(tg) {
     switch (language) {
       case 'English':
-        getResponse(tg, currentURL, 'Current');
+        getResponse(tg, currentURL);
         break;
       case '繁體中文':
-        getResponse(tg, currentURL, '現時');
+        getResponse(tg, currentURL);
         break;
       case '简体中文':
-        getResponse(tg, currentURL, '现时');
+        getResponse(tg, currentURL);
         break;
     }
   }
@@ -178,21 +177,21 @@ class TellmeWarningController extends TelegramBaseController {
     switch (language) {
       case 'English':
         if (subscribeWarning) {
-          getResponse(tg, warningSummaryURL, 'Warning');
+          getResponse(tg, warningSummaryURL);
         } else {
           tg.sendMessage('Please subscribe warning');
         }
         break;
       case '繁體中文':
         if (subscribeWarning) {
-          getResponse(tg, warningSummaryURL, '警告');
+          getResponse(tg, warningSummaryURL);
         } else {
           tg.sendMessage('請訂閱警告');
         }
         break;
       case '简体中文':
         if (subscribeWarning) {
-          getResponse(tg, warningSummaryURL, '警告');
+          getResponse(tg, warningSummaryURL);
         } else {
           tg.sendMessage('请订阅警告');
         }
