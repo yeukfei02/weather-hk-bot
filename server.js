@@ -71,31 +71,31 @@ class StartController extends TelegramBaseController {
   startHandler(tg) {
     tg.sendMessage(`
       ### Example command ###
-/start
+/start or 1
 Show all example command
 
-/tellMeCurrentAndWarning
+/tellMeCurrentAndWarning or 2
 List out the topic of current weather, warning
 
-/tellMeCurrent
+/tellMeCurrent or 3
 Echo back the current info in forecast feed
 
-/tellMeWarning
+/tellMeWarning or 4
 Echo back the current info in weather warning
 
-/subscribeWarning
+/subscribeWarning or 5
 Enable warning message
 
-/unsubscribeWarning
+/unsubscribeWarning or 6
 Disable warning message
 
-/繁體中文
+/繁體中文 or 7
 Set content in Traditional Chinese
 
-/简体中文
+/简体中文 or 8
 Set content in Simplified Chinese
 
-/english
+/english or 9
 Set content in English
     `);
   }
@@ -282,11 +282,28 @@ class SimplifiedChineseController extends TelegramBaseController {
 
 tg.router
   .when(new TextCommand('/start', 'startCommand'), new StartController())
+  .when(new TextCommand('1', 'startCommand'), new StartController())
+
   .when(new TextCommand('/tellMeCurrentAndWarning', 'tellMeCurrentAndWarningCommand'), new TellMeCurrentAndWarningController())
+  .when(new TextCommand('2', 'tellMeCurrentAndWarningCommand'), new TellMeCurrentAndWarningController())
+
   .when(new TextCommand('/tellMeCurrent', 'tellMeCurrentCommand'), new TellmeCurrentController())
+  .when(new TextCommand('3', 'tellMeCurrentCommand'), new TellmeCurrentController())
+
   .when(new TextCommand('/tellMeWarning', 'tellMeWarningCommand'), new TellmeWarningController())
+  .when(new TextCommand('4', 'tellMeWarningCommand'), new TellmeWarningController())
+
   .when(new TextCommand('/subscribeWarning', 'subscribeWarningCommand'), new SubscribeWarningController())
+  .when(new TextCommand('5', 'subscribeWarningCommand'), new SubscribeWarningController())
+
   .when(new TextCommand('/unsubscribeWarning', 'unsubscribeWarningCommand'), new UnsubscribeWarningController())
+  .when(new TextCommand('6', 'unsubscribeWarningCommand'), new UnsubscribeWarningController())
+
   .when(new TextCommand('/english', 'englishCommand'), new EnglishController())
+  .when(new TextCommand('7', 'englishCommand'), new EnglishController())
+
   .when(new TextCommand('/繁體中文', 'traditionalChineseCommand'), new TraditionalChineseController())
-  .when(new TextCommand('/简体中文', 'simplifiedChineseCommand'), new SimplifiedChineseController());
+  .when(new TextCommand('8', 'traditionalChineseCommand'), new TraditionalChineseController())
+
+  .when(new TextCommand('/简体中文', 'simplifiedChineseCommand'), new SimplifiedChineseController())
+  .when(new TextCommand('9', 'simplifiedChineseCommand'), new SimplifiedChineseController());
