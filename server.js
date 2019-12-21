@@ -3,7 +3,7 @@
 const Telegram = require('telegram-node-bot');
 const TelegramBaseController = Telegram.TelegramBaseController;
 const TextCommand = Telegram.TextCommand;
-const $ = new Telegram.Telegram(process.env.TELEGRAM_KEY);
+const tg = new Telegram.Telegram(process.env.TELEGRAM_KEY);
 
 const axios = require("axios");
 const _ = require("lodash");
@@ -41,7 +41,7 @@ let currentURL = currentURLObj.english;
 let warningInformationURL = warningInformationURLObj.english;
 let warningSummaryURL = warningSummaryURLObj.english;
 
-async function getResponse($, urlLink, strToShow) {
+async function getResponse(tg, urlLink, strToShow) {
   const response = await axios.get(urlLink);
   if (!_.isEmpty(response)) {
     parseString(response.data, (err, result) => {
@@ -56,8 +56,8 @@ async function getResponse($, urlLink, strToShow) {
                   wordwrap: 130,
                   //ignoreImage: true
                 });
-                $.sendMessage(`------------------ [${strToShow}] ------------------`);
-                $.sendMessage(text);
+                tg.sendMessage(`------------------ [${strToShow}] ------------------`);
+                tg.sendMessage(text);
               });
             }
           });
@@ -68,8 +68,8 @@ async function getResponse($, urlLink, strToShow) {
 }
 
 class StartController extends TelegramBaseController {
-  startHandler($) {
-    $.sendMessage(`
+  startHandler(tg) {
+    tg.sendMessage(`
       ### Example command ###
 /start
 Show all example command
@@ -108,30 +108,30 @@ Set content in English
 }
 
 class TellMeCurrentAndWarningController extends TelegramBaseController {
-  async tellMeCurrentAndWarningHandler($) {
+  async tellMeCurrentAndWarningHandler(tg) {
     switch (language) {
       case 'English':
-        await getResponse($, currentURL, 'Current');
+        await getResponse(tg, currentURL, 'Current');
         if (subscribeWarning) {
-          await getResponse($, warningInformationURL, 'Warning');
+          await getResponse(tg, warningInformationURL, 'Warning');
         } else {
-          $.sendMessage('Please subscribe warning');
+          tg.sendMessage('Please subscribe warning');
         }
         break;
       case '繁體中文':
-        await getResponse($, currentURL, '現時');
+        await getResponse(tg, currentURL, '現時');
         if (subscribeWarning) {
-          await getResponse($, warningInformationURL, '警告');
+          await getResponse(tg, warningInformationURL, '警告');
         } else {
-          $.sendMessage('Please subscribe warning');
+          tg.sendMessage('Please subscribe warning');
         }
         break;
       case '简体中文':
-        await getResponse($, currentURL, '现时');
+        await getResponse(tg, currentURL, '现时');
         if (subscribeWarning) {
-          await getResponse($, warningInformationURL, '警告');
+          await getResponse(tg, warningInformationURL, '警告');
         } else {
-          $.sendMessage('Please subscribe warning');
+          tg.sendMessage('Please subscribe warning');
         }
         break;
     }
@@ -145,16 +145,16 @@ class TellMeCurrentAndWarningController extends TelegramBaseController {
 }
 
 class TellmeCurrentController extends TelegramBaseController {
-  tellMeCurrentHandler($) {
+  tellMeCurrentHandler(tg) {
     switch (language) {
       case 'English':
-        getResponse($, currentURL, 'Current');
+        getResponse(tg, currentURL, 'Current');
         break;
       case '繁體中文':
-        getResponse($, currentURL, '現時');
+        getResponse(tg, currentURL, '現時');
         break;
       case '简体中文':
-        getResponse($, currentURL, '现时');
+        getResponse(tg, currentURL, '现时');
         break;
     }
   }
@@ -167,27 +167,27 @@ class TellmeCurrentController extends TelegramBaseController {
 }
 
 class TellmeWarningController extends TelegramBaseController {
-  tellMeWarningHandler($) {
+  tellMeWarningHandler(tg) {
     switch (language) {
       case 'English':
         if (subscribeWarning) {
-          getResponse($, warningSummaryURL, 'Warning');
+          getResponse(tg, warningSummaryURL, 'Warning');
         } else {
-          $.sendMessage('Please subscribe warning');
+          tg.sendMessage('Please subscribe warning');
         }
         break;
       case '繁體中文':
         if (subscribeWarning) {
-          getResponse($, warningSummaryURL, '警告');
+          getResponse(tg, warningSummaryURL, '警告');
         } else {
-          $.sendMessage('Please subscribe warning');
+          tg.sendMessage('Please subscribe warning');
         }
         break;
       case '简体中文':
         if (subscribeWarning) {
-          getResponse($, warningSummaryURL, '警告');
+          getResponse(tg, warningSummaryURL, '警告');
         } else {
-          $.sendMessage('Please subscribe warning');
+          tg.sendMessage('Please subscribe warning');
         }
         break;
     }
@@ -201,10 +201,10 @@ class TellmeWarningController extends TelegramBaseController {
 }
 
 class SubscribeWarningController extends TelegramBaseController {
-  subscribeWarningHandler($) {
+  subscribeWarningHandler(tg) {
     subscribeWarning = true;
 
-    $.sendMessage('You just subscribe warning');
+    tg.sendMessage('You just subscribe warning');
   }
 
   get routes() {
@@ -215,10 +215,10 @@ class SubscribeWarningController extends TelegramBaseController {
 }
 
 class UnsubscribeWarningController extends TelegramBaseController {
-  unsubscribeWarningHandler($) {
+  unsubscribeWarningHandler(tg) {
     subscribeWarning = false;
 
-    $.sendMessage('You just unsubscribe warning');
+    tg.sendMessage('You just unsubscribe warning');
   }
 
   get routes() {
@@ -229,13 +229,13 @@ class UnsubscribeWarningController extends TelegramBaseController {
 }
 
 class EnglishController extends TelegramBaseController {
-  englishHandler($) {
+  englishHandler(tg) {
     language = languageObj.english;
     currentURL = currentURLObj.english;
     warningInformationURL = warningInformationURLObj.english;
     warningSummaryURL = warningSummaryURLObj.english;
 
-    $.sendMessage('OK');
+    tg.sendMessage('OK');
   }
 
   get routes() {
@@ -247,13 +247,13 @@ class EnglishController extends TelegramBaseController {
 
 
 class TraditionalChineseController extends TelegramBaseController {
-  traditionalChineseHandler($) {
+  traditionalChineseHandler(tg) {
     language = languageObj.traditionalChinese;
     currentURL = currentURLObj.traditionalChinese;
     warningInformationURL = warningInformationURLObj.traditionalChinese;
     warningSummaryURL = warningSummaryURLObj.traditionalChinese;
 
-    $.sendMessage('知道了');
+    tg.sendMessage('知道了');
   }
 
   get routes() {
@@ -264,13 +264,13 @@ class TraditionalChineseController extends TelegramBaseController {
 }
 
 class SimplifiedChineseController extends TelegramBaseController {
-  simplifiedChineseHandler($) {
+  simplifiedChineseHandler(tg) {
     language = languageObj.simplifiedChinese;
     currentURL = currentURLObj.simplifiedChinese;
     warningInformationURL = warningInformationURLObj.simplifiedChinese;
     warningSummaryURL = warningSummaryURLObj.simplifiedChinese;
 
-    $.sendMessage('知道了');
+    tg.sendMessage('知道了');
   }
 
   get routes() {
@@ -280,7 +280,7 @@ class SimplifiedChineseController extends TelegramBaseController {
   }
 }
 
-$.router
+tg.router
   .when(new TextCommand('/start', 'startCommand'), new StartController())
   .when(new TextCommand('/tellMeCurrentAndWarning', 'tellMeCurrentAndWarningCommand'), new TellMeCurrentAndWarningController())
   .when(new TextCommand('/tellMeCurrent', 'tellMeCurrentCommand'), new TellmeCurrentController())
