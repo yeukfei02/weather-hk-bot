@@ -4,11 +4,11 @@
   "description": "Hong Kong Weather Bot",
   "main": "server.js",
   "dependencies": {
+    "axios": "^0.19.0",
     "html-to-text": "^3.3.0",
     "lodash": "^4.17.15",
     "moment": "^2.24.0",
     "nodemon": "^1.18.3",
-    "request": "^2.83.0",
     "telegram-node-bot": "^4.0.5",
     "xml2js": "^0.4.19"
   },
