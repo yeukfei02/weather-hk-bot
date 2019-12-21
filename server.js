@@ -3,7 +3,7 @@
 const Telegram = require('telegram-node-bot');
 const TelegramBaseController = Telegram.TelegramBaseController;
 const TextCommand = Telegram.TextCommand;
-const tg = new Telegram.Telegram(process.env.TELEGRAM_KEY);
+const tg = new Telegram.Telegram(process.env.TELEGRAM_KEY, { workers: 1 });
 
 const axios = require("axios");
 const _ = require("lodash");
@@ -69,35 +69,47 @@ async function getResponse(tg, urlLink, strToShow) {
 
 class StartController extends TelegramBaseController {
   startHandler(tg) {
-    tg.sendMessage(`
-      ### Example command ###
-/start or 1
+    tg.runMenu({
+      message: `
+### Example command ###
+/start
 Show all example command
 
-/tellMeCurrentAndWarning or 2
+/tellMeCurrentAndWarning
 List out the topic of current weather, warning
 
-/tellMeCurrent or 3
+/tellMeCurrent
 Echo back the current info in forecast feed
 
-/tellMeWarning or 4
+/tellMeWarning
 Echo back the current info in weather warning
 
-/subscribeWarning or 5
+/subscribeWarning
 Enable warning message
 
-/unsubscribeWarning or 6
+/unsubscribeWarning
 Disable warning message
 
-/繁體中文 or 7
+/繁體中文
 Set content in Traditional Chinese
 
-/简体中文 or 8
+/简体中文
 Set content in Simplified Chinese
 
-/english or 9
+/english
 Set content in English
-    `);
+      `,
+      layout: [1, 3, 2, 3],
+      '/start': () => { },
+      '/tellMeCurrentAndWarning': () => { },
+      '/tellMeCurrent': () => { },
+      '/tellMeWarning': () => { },
+      '/subscribeWarning': () => { },
+      '/unsubscribeWarning': () => { },
+      '/繁體中文': () => { },
+      '/简体中文': () => { },
+      '/english': () => { },
+    });
   }
 
   get routes() {
@@ -123,7 +135,7 @@ class TellMeCurrentAndWarningController extends TelegramBaseController {
         if (subscribeWarning) {
           await getResponse(tg, warningInformationURL, '警告');
         } else {
-          tg.sendMessage('Please subscribe warning');
+          tg.sendMessage('請訂閱警告');
         }
         break;
       case '简体中文':
@@ -131,7 +143,7 @@ class TellMeCurrentAndWarningController extends TelegramBaseController {
         if (subscribeWarning) {
           await getResponse(tg, warningInformationURL, '警告');
         } else {
-          tg.sendMessage('Please subscribe warning');
+          tg.sendMessage('请订阅警告');
         }
         break;
     }
@@ -180,14 +192,14 @@ class TellmeWarningController extends TelegramBaseController {
         if (subscribeWarning) {
           getResponse(tg, warningSummaryURL, '警告');
         } else {
-          tg.sendMessage('Please subscribe warning');
+          tg.sendMessage('請訂閱警告');
         }
         break;
       case '简体中文':
         if (subscribeWarning) {
           getResponse(tg, warningSummaryURL, '警告');
         } else {
-          tg.sendMessage('Please subscribe warning');
+          tg.sendMessage('请订阅警告');
         }
         break;
     }
@@ -282,28 +294,11 @@ class SimplifiedChineseController extends TelegramBaseController {
 
 tg.router
   .when(new TextCommand('/start', 'startCommand'), new StartController())
-  .when(new TextCommand('1', 'startCommand'), new StartController())
-
   .when(new TextCommand('/tellMeCurrentAndWarning', 'tellMeCurrentAndWarningCommand'), new TellMeCurrentAndWarningController())
-  .when(new TextCommand('2', 'tellMeCurrentAndWarningCommand'), new TellMeCurrentAndWarningController())
-
   .when(new TextCommand('/tellMeCurrent', 'tellMeCurrentCommand'), new TellmeCurrentController())
-  .when(new TextCommand('3', 'tellMeCurrentCommand'), new TellmeCurrentController())
-
   .when(new TextCommand('/tellMeWarning', 'tellMeWarningCommand'), new TellmeWarningController())
-  .when(new TextCommand('4', 'tellMeWarningCommand'), new TellmeWarningController())
-
   .when(new TextCommand('/subscribeWarning', 'subscribeWarningCommand'), new SubscribeWarningController())
-  .when(new TextCommand('5', 'subscribeWarningCommand'), new SubscribeWarningController())
-
   .when(new TextCommand('/unsubscribeWarning', 'unsubscribeWarningCommand'), new UnsubscribeWarningController())
-  .when(new TextCommand('6', 'unsubscribeWarningCommand'), new UnsubscribeWarningController())
-
   .when(new TextCommand('/english', 'englishCommand'), new EnglishController())
-  .when(new TextCommand('7', 'englishCommand'), new EnglishController())
-
   .when(new TextCommand('/繁體中文', 'traditionalChineseCommand'), new TraditionalChineseController())
-  .when(new TextCommand('8', 'traditionalChineseCommand'), new TraditionalChineseController())
-
   .when(new TextCommand('/简体中文', 'simplifiedChineseCommand'), new SimplifiedChineseController())
-  .when(new TextCommand('9', 'simplifiedChineseCommand'), new SimplifiedChineseController());
