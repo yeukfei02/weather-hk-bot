@@ -216,7 +216,17 @@ class SubscribeWarningController extends TelegramBaseController {
   subscribeWarningHandler(tg) {
     subscribeWarning = true;
 
-    tg.sendMessage('You just subscribe warning');
+    switch (language) {
+      case 'English':
+        tg.sendMessage('You just subscribe warning');
+        break;
+      case '繁體中文':
+        tg.sendMessage('已訂閱警告');
+        break;
+      case '简体中文':
+        tg.sendMessage('已订阅警告');
+        break;
+    }
   }
 
   get routes() {
@@ -230,7 +240,17 @@ class UnsubscribeWarningController extends TelegramBaseController {
   unsubscribeWarningHandler(tg) {
     subscribeWarning = false;
 
-    tg.sendMessage('You just unsubscribe warning');
+    switch (language) {
+      case 'English':
+        tg.sendMessage('You just unsubscribe warning');
+        break;
+      case '繁體中文':
+        tg.sendMessage('已取消訂閱警告');
+        break;
+      case '简体中文':
+        tg.sendMessage('已取消订阅警告');
+        break;
+    }
   }
 
   get routes() {
