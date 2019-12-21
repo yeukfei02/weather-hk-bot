@@ -27,13 +27,13 @@ Show all example command
 List out the topic of current weather, warning
 
 ```
-/tellmeCurrent
+/tellMeCurrent
 ```
 
 Echo back the current info in forecast feed
 
 ```
-/tellmeWarning
+/tellMeWarning
 ```
 
 Echo back the current info in weather warning
