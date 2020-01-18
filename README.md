@@ -2,10 +2,10 @@
 
 Hong Kong Weather Bot
 
-### Requirement:
+## Requirement:
 - install yarn
 
-### Testing and run:
+## Testing and run:
 ```
 $ yarn
 $ yarn start
@@ -13,7 +13,7 @@ $ yarn start
 
 Open http://t.me/weatherHKBot
 
-### Example command:
+## Example command:
 
 Show all example command
 
@@ -68,3 +68,7 @@ Set content in English
 ```
 /english
 ```
+
+## Contributing
+
+Please refer to [CONTRIBUTING.md](https://github.com/yeukfei02/weather-hk-bot/blob/master/CONTRIBUTING.md)
