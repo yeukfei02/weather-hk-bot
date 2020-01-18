@@ -3,7 +3,7 @@
 Hong Kong Weather Bot
 
 ### Requirement:
-- Install yarn
+- install yarn
 
 ### Testing and run:
 ```
@@ -14,56 +14,57 @@ $ yarn start
 Open http://t.me/weatherHKBot
 
 ### Example command:
-```
-/start
-```
 
 Show all example command
 
 ```
-/tellMeCurrentAndWarning
+/start
 ```
 
 List out the topic of current weather, warning
 
 ```
-/tellMeCurrent
+/tellMeCurrentAndWarning
 ```
 
 Echo back the current info in forecast feed
 
 ```
-/tellMeWarning
+/tellMeCurrent
 ```
 
 Echo back the current info in weather warning
 
 ```
-/subscribeWarning
+/tellMeWarning
 ```
 
 Enable warning message
 
 ```
-/unsubscribeWarning
+/subscribeWarning
 ```
 
 Disable warning message
 
 ```
-/繁體中文
+/unsubscribeWarning
 ```
 
 Set content in Traditional Chinese
 
 ```
-/简体中文
+/繁體中文
 ```
 
 Set content in Simplified Chinese
 
 ```
-/english
+/简体中文
 ```
 
 Set content in English
+
+```
+/english
+```
