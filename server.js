@@ -10,7 +10,6 @@ const _ = require("lodash");
 const xmlParser = require('xml2json');
 const htmlToText = require('html-to-text');
 
-// store user setting
 const languageObj = {
   english: 'English',
   traditionalChinese: '繁體中文',
