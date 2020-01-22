@@ -3,7 +3,7 @@
 const Telegram = require('telegram-node-bot');
 const TelegramBaseController = Telegram.TelegramBaseController;
 const TextCommand = Telegram.TextCommand;
-const tg = new Telegram.Telegram(process.env.TELEGRAM_KEY, { workers: 1 });
+const tg = new Telegram.Telegram(process.env.TELEGRAM_BOT_KEY, { workers: 1 });
 
 const axios = require("axios");
 const _ = require("lodash");
