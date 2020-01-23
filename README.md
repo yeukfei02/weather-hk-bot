@@ -4,6 +4,7 @@ Hong Kong Weather Bot
 
 ## Requirement:
 - install yarn
+- install node (v12+)
 
 ## Testing and run:
 ```
