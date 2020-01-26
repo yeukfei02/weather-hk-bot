@@ -9,6 +9,11 @@ Hong Kong Weather Bot
 ## Testing and run:
 ```
 $ yarn
+
+// use eslint and prettier to format code
+$ yarn run lint
+
+// development
 $ yarn start
 ```
 

@@ -5,33 +5,33 @@ const TelegramBaseController = Telegram.TelegramBaseController;
 const TextCommand = Telegram.TextCommand;
 const tg = new Telegram.Telegram(process.env.TELEGRAM_BOT_KEY, { workers: 1 });
 
-const axios = require("axios");
-const _ = require("lodash");
+const axios = require('axios');
+const _ = require('lodash');
 const xmlParser = require('xml2json');
 const htmlToText = require('html-to-text');
 
 const languageObj = {
   english: 'English',
   traditionalChinese: '繁體中文',
-  simplifiedChinese: '简体中文'
+  simplifiedChinese: '简体中文',
 };
 
 const currentURLObj = {
   english: 'http://rss.weather.gov.hk/rss/CurrentWeather.xml',
   traditionalChinese: 'http://rss.weather.gov.hk/rss/CurrentWeather_uc.xml',
-  simplifiedChinese: 'http://gbrss.weather.gov.hk/rss/CurrentWeather_uc.xml'
+  simplifiedChinese: 'http://gbrss.weather.gov.hk/rss/CurrentWeather_uc.xml',
 };
 
 const warningInformationURLObj = {
   english: 'http://rss.weather.gov.hk/rss/WeatherWarningBulletin.xml',
   traditionalChinese: 'http://rss.weather.gov.hk/rss/WeatherWarningBulletin_uc.xml',
-  simplifiedChinese: 'http://gbrss.weather.gov.hk/rss/WeatherWarningBulletin_uc.xml'
+  simplifiedChinese: 'http://gbrss.weather.gov.hk/rss/WeatherWarningBulletin_uc.xml',
 };
 
 const warningSummaryURLObj = {
   english: 'http://rss.weather.gov.hk/rss/WeatherWarningSummaryv2.xml',
   traditionalChinese: 'http://rss.weather.gov.hk/rss/WeatherWarningSummaryv2_uc.xml',
-  simplifiedChinese: 'http://gbrss.weather.gov.hk/rss/WeatherWarningSummaryv2_uc.xml'
+  simplifiedChinese: 'http://gbrss.weather.gov.hk/rss/WeatherWarningSummaryv2_uc.xml',
 };
 
 let subscribeWarning = true;
@@ -93,22 +93,22 @@ Set content in Simplified Chinese
 Set content in English
       `,
       layout: [1, 3, 2, 3],
-      '/start': () => { },
-      '/tellMeCurrentAndWarning': () => { },
-      '/tellMeCurrent': () => { },
-      '/tellMeWarning': () => { },
-      '/subscribeWarning': () => { },
-      '/unsubscribeWarning': () => { },
-      '/繁體中文': () => { },
-      '/简体中文': () => { },
-      '/english': () => { },
+      '/start': () => {},
+      '/tellMeCurrentAndWarning': () => {},
+      '/tellMeCurrent': () => {},
+      '/tellMeWarning': () => {},
+      '/subscribeWarning': () => {},
+      '/unsubscribeWarning': () => {},
+      '/繁體中文': () => {},
+      '/简体中文': () => {},
+      '/english': () => {},
     });
   }
 
   get routes() {
     return {
-      'startCommand': 'startHandler'
-    }
+      startCommand: 'startHandler',
+    };
   }
 }
 
@@ -144,8 +144,8 @@ class TellMeCurrentAndWarningController extends TelegramBaseController {
 
   get routes() {
     return {
-      'tellMeCurrentAndWarningCommand': 'tellMeCurrentAndWarningHandler'
-    }
+      tellMeCurrentAndWarningCommand: 'tellMeCurrentAndWarningHandler',
+    };
   }
 }
 
@@ -166,8 +166,8 @@ class TellmeCurrentController extends TelegramBaseController {
 
   get routes() {
     return {
-      'tellMeCurrentCommand': 'tellMeCurrentHandler'
-    }
+      tellMeCurrentCommand: 'tellMeCurrentHandler',
+    };
   }
 }
 
@@ -200,8 +200,8 @@ class TellmeWarningController extends TelegramBaseController {
 
   get routes() {
     return {
-      'tellMeWarningCommand': 'tellMeWarningHandler'
-    }
+      tellMeWarningCommand: 'tellMeWarningHandler',
+    };
   }
 }
 
@@ -224,8 +224,8 @@ class SubscribeWarningController extends TelegramBaseController {
 
   get routes() {
     return {
-      'subscribeWarningCommand': 'subscribeWarningHandler'
-    }
+      subscribeWarningCommand: 'subscribeWarningHandler',
+    };
   }
 }
 
@@ -248,8 +248,8 @@ class UnsubscribeWarningController extends TelegramBaseController {
 
   get routes() {
     return {
-      'unsubscribeWarningCommand': 'unsubscribeWarningHandler'
-    }
+      unsubscribeWarningCommand: 'unsubscribeWarningHandler',
+    };
   }
 }
 
@@ -265,11 +265,10 @@ class EnglishController extends TelegramBaseController {
 
   get routes() {
     return {
-      'englishCommand': 'englishHandler'
-    }
+      englishCommand: 'englishHandler',
+    };
   }
 }
-
 
 class TraditionalChineseController extends TelegramBaseController {
   traditionalChineseHandler(tg) {
@@ -283,8 +282,8 @@ class TraditionalChineseController extends TelegramBaseController {
 
   get routes() {
     return {
-      'traditionalChineseCommand': 'traditionalChineseHandler'
-    }
+      traditionalChineseCommand: 'traditionalChineseHandler',
+    };
   }
 }
 
@@ -300,18 +299,21 @@ class SimplifiedChineseController extends TelegramBaseController {
 
   get routes() {
     return {
-      'simplifiedChineseCommand': 'simplifiedChineseHandler'
-    }
+      simplifiedChineseCommand: 'simplifiedChineseHandler',
+    };
   }
 }
 
 tg.router
   .when(new TextCommand('/start', 'startCommand'), new StartController())
-  .when(new TextCommand('/tellMeCurrentAndWarning', 'tellMeCurrentAndWarningCommand'), new TellMeCurrentAndWarningController())
+  .when(
+    new TextCommand('/tellMeCurrentAndWarning', 'tellMeCurrentAndWarningCommand'),
+    new TellMeCurrentAndWarningController(),
+  )
   .when(new TextCommand('/tellMeCurrent', 'tellMeCurrentCommand'), new TellmeCurrentController())
   .when(new TextCommand('/tellMeWarning', 'tellMeWarningCommand'), new TellmeWarningController())
   .when(new TextCommand('/subscribeWarning', 'subscribeWarningCommand'), new SubscribeWarningController())
   .when(new TextCommand('/unsubscribeWarning', 'unsubscribeWarningCommand'), new UnsubscribeWarningController())
   .when(new TextCommand('/english', 'englishCommand'), new EnglishController())
   .when(new TextCommand('/繁體中文', 'traditionalChineseCommand'), new TraditionalChineseController())
-  .when(new TextCommand('/简体中文', 'simplifiedChineseCommand'), new SimplifiedChineseController())
+  .when(new TextCommand('/简体中文', 'simplifiedChineseCommand'), new SimplifiedChineseController());
