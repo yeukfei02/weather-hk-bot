@@ -10,11 +10,14 @@ Hong Kong Weather Bot
 ```
 $ yarn
 
+// development
+$ yarn run dev
+
+// production
+$ yarn run start
+
 // use eslint and prettier to format code
 $ yarn run lint
-
-// development
-$ yarn start
 ```
 
 Open http://t.me/weatherHKBot
