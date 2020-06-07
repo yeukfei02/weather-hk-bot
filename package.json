@@ -2,6 +2,9 @@
   "name": "weather-hk-bot",
   "version": "1.0.0",
   "description": "Hong Kong Weather Bot",
+  "repository": "https://github.com/yeukfei02/weather-hk-bot.git",
+  "author": "Donald Wu <yeukfei02@gmail.com>",
+  "license": "MIT",
   "main": "server.js",
   "dependencies": {
     "axios": "^0.19.0",
@@ -9,6 +12,7 @@
     "eslint-config-prettier": "^6.9.0",
     "eslint-plugin-prettier": "^3.1.2",
     "html-to-text": "^3.3.0",
+    "husky": "^4.2.5",
     "lodash": "^4.17.15",
     "moment": "^2.24.0",
     "nodemon": "^2.0.2",
@@ -21,7 +25,10 @@
     "start": "NOVE_ENV=production nodemon server.js",
     "lint": "eslint . --quiet --fix"
   },
-  "repository": "https://github.com/yeukfei02/weather-hk-bot.git",
-  "author": "Donald Wu <yeukfei02@gmail.com>",
-  "license": "MIT"
+  "husky": {
+    "hooks": {
+      "pre-commit": "yarn lint",
+      "pre-push": "yarn lint"
+    }
+  }
 }
