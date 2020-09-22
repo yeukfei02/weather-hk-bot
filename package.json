@@ -1,6 +1,6 @@
 {
   "name": "weather-hk-bot",
-  "version": "1.1.2",
+  "version": "1.2.0",
   "description": "Hong Kong Weather Bot",
   "repository": "https://github.com/yeukfei02/weather-hk-bot.git",
   "author": "Donald Wu <yeukfei02@gmail.com>",
