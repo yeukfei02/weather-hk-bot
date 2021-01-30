@@ -8,25 +8,27 @@
   "main": "server.js",
   "dependencies": {
     "axios": "^0.19.0",
-    "eslint": "^6.8.0",
-    "eslint-config-prettier": "^6.9.0",
-    "eslint-plugin-prettier": "^3.1.2",
-    "git-cz": "^4.7.1",
     "html-to-text": "^3.3.0",
-    "husky": "^4.2.5",
     "lodash": "^4.17.19",
     "moment": "^2.24.0",
     "nodemon": "^2.0.2",
-    "prettier": "^1.19.1",
-    "standard-version": "^9.0.0",
     "telegram-node-bot": "^4.0.5",
     "xml2json": "^0.12.0"
+  },
+  "devDependencies": {
+    "eslint": "^6.8.0",
+    "eslint-config-prettier": "^6.9.0",
+    "eslint-plugin-prettier": "^3.1.2",
+    "git-cz": "^4.7.6",
+    "husky": "^4.2.5",
+    "prettier": "^1.19.1",
+    "standard-version": "^9.0.0"
   },
   "scripts": {
     "dev": "NOVE_ENV=development nodemon server.js",
     "start": "NOVE_ENV=production nodemon server.js",
     "lint": "eslint . --quiet --fix",
-    "commit": "npx git-cz",
+    "commit": "git-cz",
     "release": "standard-version"
   },
   "husky": {
