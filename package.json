@@ -10,7 +10,7 @@
     "axios": "^0.21.2",
     "html-to-text": "^3.3.0",
     "lodash": "^4.17.21",
-    "moment": "^2.24.0",
+    "moment": "^2.29.2",
     "nodemon": "^2.0.2",
     "telegram-node-bot": "^4.0.5",
     "xml2json": "^0.12.0"
