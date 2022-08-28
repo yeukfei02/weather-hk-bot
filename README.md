@@ -22,8 +22,6 @@ $ yarn run start
 $ yarn run lint
 ```
 
-Open <http://t.me/weatherHKBot>
-
 ## Example command
 
 Show all example command
